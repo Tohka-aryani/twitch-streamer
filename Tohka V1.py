@@ -1,46 +1,37 @@
 import streamlit as st
-import pandas as pd
-import altair as alt
 
-# Create a function to load data
-@st.cache
-def load_data():
-    data = pd.read_csv("data.csv")
-    return data
+def main():
+    st.title("Form Entry App")
+    
+    # Text input
+    name = st.text_input("Name:")
+    
+    # Number input
+    age = st.number_input("Age:")
+    
+    # Dropdown menu
+    occupation_options = ["Student", "Engineer", "Teacher", "Other"]
+    occupation = st.selectbox("Occupation:", occupation_options)
+    
+    # Checkbox
+    is_married = st.checkbox("Married?")
+    
+    # Date input
+    birth_date = st.date_input("Birth date:")
+    
+    # Time input
+    appointment_time = st.time_input("Appointment time:")
+    
+    # Submit button
+    if st.button("Submit"):
+        # Do something with the form data
+        st.write("Name:", name)
+        st.write("Age:", age)
+        st.write("Occupation:", occupation)
+        st.write("Married?", is_married)
+        st.write("Birth date:", birth_date)
+        st.write("Appointment time:", appointment_time)
 
-# Create a function to save data
-def save_data(data):
-    data.to_csv("data.csv", index=False)
+if __name__ == "__main__":
+    main()
 
-# Load the data
-data = load_data()
-
-# Define the form
-form = st.form("my_form")
-name = form.text_input("Name")
-email = form.text_input("Email")
-submit = form.form_submit_button("Submit")
-
-# Handle the form submission
-if submit:
-    new_row = {"Name": name, "Email": email}
-    data = data.append(new_row, ignore_index=True)
-    save_data(data)
-
-# Define the search
-search = st.text_input("Search")
-filtered_data = data[data["Name"].str.contains(search, case=False)]
-
-# Display the data
-st.write(filtered_data)
-
-# Create a chart
-chart = alt.Chart(filtered_data).mark_bar().encode(
-    x="Name",
-    y="count()"
-).properties(
-    height=400,
-    width=700
-)
-
-st.altair_chart(chart, use_container_width=True)
